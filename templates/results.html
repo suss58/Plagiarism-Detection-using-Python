@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plagiarism Check Results</title>
+</head>
+<body>
+    <h1>Plagiarism Check Results</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>File 1</th>
+                <th>File 2</th>
+                <th>Similarity Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file1_id, file2_id, similarity in similarities %}
+            <tr>
+                <td>{{ file1_id }}</td>
+                <td>{{ file2_id }}</td>
+                <td>{{ similarity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
