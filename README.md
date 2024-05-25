@@ -16,5 +16,5 @@ This project implements a basic plagiarism detection system using Python. It use
     ```
 2. Run the main script:
     ```
-    python src/main.py
+    python app.py
     ```
