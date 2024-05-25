@@ -1,15 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plagiarism Detection</title>
-</head>
-<body>
-    <h1>Upload Files for Plagiarism Detection</h1>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" multiple>
-        <button type="submit">Upload</button>
-    </form>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title >Plagiarism Detection</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+        <h1 class="text-center"><a href="/">Plagiarism Detection</a></h1>
+      <form
+        action="{{ url_for('upload_file') }}"
+        method="post"
+        enctype="multipart/form-data"
+        class="mt-4"
+      >
+        <div class="form-group">
+          <label for="file">Upload File:</label>
+          <input type="file" class="form-control-file" id="file" name="file" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+      <h2 class="mt-5">Uploaded Files</h2>
+      <ul class="list-group mt-3">
+        {% for file in files %}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          {{ file.filename }}
+          <form
+            action="{{ url_for('check_plagiarism_route') }}"
+            method="POST"
+            class="ml-auto"
+          >
+            <input type="hidden" name="file_id" value="{{ file.id }}" />
+            <button type="submit" class="btn btn-danger btn-sm">
+              Check Plagiarism
+            </button>
+          </form>
+          <form
+            action="{{ url_for('delete_file', file_id=file.id) }}"
+            method="POST"
+            class="ml-2"
+          >
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      <!-- Button to view all available files -->
+      <form action="{{ url_for('view_all_files') }}" method="GET" class="mt-5">
+        <button type="submit" class="btn btn-info">View All Files</button>
+      </form>
+
+      <!-- Results section -->
+      {% if results %}
+      <h2 class="mt-5">Results:</h2>
+      <ul class="list-group mt-3">
+        {% for result in results %}
+        <li class="list-group-item">
+          <strong>{{ result.file1 }} and {{ result.file2 }}</strong>
+          {% if result.plagiarism_detected %}
+          <p>
+            Plagiarism Detected! Similarity Percentage: {{
+            result.similarity_percentage }}%
+          </p>
+          {% else %}
+          <p>No plagiarism detected.</p>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="alert alert-warning mt-3">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
